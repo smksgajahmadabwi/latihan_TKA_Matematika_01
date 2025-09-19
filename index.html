@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LATIHAN SOAL TKA MATEMATIKA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            width: 95%;
+            max-width: 1200px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f9f9f9;
+            border-left: 1px solid #eee;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .timer-box, .current-time-box {
+            background-color: #e0f7fa;
+            border: 1px solid #b2ebf2;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #00796b;
+        }
+        .timer-box strong, .current-time-box strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 1.2em;
+            color: #004d40;
+        }
+
+        .question-navigation {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .question-navigation h3 {
+            margin-top: 0;
+            color: #555;
+            font-size: 1.2em;
+        }
+
+        .question-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .question-list button {
+            width: 40px;
+            height: 40px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #333;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .question-list button:hover {
+            background-color: #ddd;
+            border-color: #bbb;
+        }
+
+        .question-list button.active {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .question-list button.answered {
+            background-color: #28a745;
+            color: #fff;
+            border-color: #28a745;
+        }
+        
+        .question-list button.answered.active {
+            background-color: #007bff; /* Active answered question retains blue */
+            border-color: #007bff;
+        }
+
+        .question-area {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+
+        .question-area h2 {
+            color: #333;
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+        
+        .question-text p {
+            margin-bottom: 10px;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .navigation-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navigation-buttons button, .finish-button button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .navigation-buttons button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .prev-button {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        .prev-button:hover:enabled {
+            background-color: #5a6268;
+        }
+
+        .next-button {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .next-button:hover:enabled {
+            background-color: #0056b3;
+        }
+
+        .finish-button {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .finish-button button {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 12px 25px;
+            font-size: 1.1em;
+        }
+        .finish-button button:hover {
+            background-color: #c82333;
+        }
+
+        .score-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .modal-content p {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .modal-content .score-value {
+            font-size: 2.5em;
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-content button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s;
+        }
+
+        .modal-content button:hover {
+            background-color: #0056b3;
+        }
+
+        .question-text img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 15px auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        /* Review mode specific styles */
+        .review-mode-info {
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .review-solution-button {
+            background-color: #17a2b8;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        .review-solution-button:hover {
+            background-color: #138496;
+        }
+        .solution-text {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #e2f0fb;
+            border: 1px solid #bce8f1;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+        }
+        .solution-text p {
+            margin-bottom: 5px;
+        }
+        .correct-answer-label {
+            font-weight: bold;
+            color: #28a745; /* Green for correct answer */
+        }
+        .user-answer-label {
+            font-weight: bold;
+            color: #007bff; /* Blue for user's answer */
+        }
+        .wrong-answer-label {
+            font-weight: bold;
+            color: #dc3545; /* Red if user's answer is wrong */
+        }
+        .options.review label input[type="radio"] {
+            pointer-events: none; /* Disable radio button interaction in review */
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+            }
+            .sidebar {
+                width: 100%;
+                border-left: none;
+                border-bottom: 1px solid #eee;
+                order: 2;
+            }
+            .main-content {
+                order: 1;
+            }
+            .question-list {
+                grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+                gap: 5px;
+            }
+            .question-list button {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8em;
+            }
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .finish-button button {
+                width: 100%;
+            }
+        }
+    </style>
+    <!-- Load MathJax for LaTeX rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="header">
+                <h1>LATIHAN SOAL TKA MATEMATIKA - 01</h1>
+                <div id="current-time" class="current-time-box"><strong></strong></div>
+            </div>
+            
+            <div id="question-area" class="question-area">
+                <!-- Question will be loaded here by JavaScript -->
+            </div>
+
+            <div id="exam-navigation" class="navigation-buttons">
+                <button id="prev-button" class="prev-button" disabled>Previous</button>
+                <button id="next-button" class="next-button">Next</button>
+            </div>
+            <div id="exam-finish" class="finish-button">
+                <button id="finish-exam-button">Selesai Ujian</button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="timer-box">
+                Waktu Tersisa: <strong id="countdown-timer">00:00:00</strong>
+            </div>
+            <div class="question-navigation">
+                <h3>Nomor Soal</h3>
+                <div id="question-list" class="question-list">
+                    <!-- Question navigation buttons will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score Modal -->
+    <div id="scoreModal" class="score-modal">
+        <div class="modal-content">
+            <h2>Ujian Selesai!</h2>
+            <p>Anda telah menyelesaikan ujian.</p>
+            <p>Skor Anda:</p>
+            <div id="finalScore" class="score-value"></div>
+            <p id="feedbackMessage"></p>
+            <button id="closeModal">Lihat Hasil dan Solusi</button>
+        </div>
+    </div>
+
+    <script>
+        // Array of questions, options, correct answers, and solutions
+        const questions = [
+            {
+                id: 1,
+                text: "Hasil dari \\(\\frac{3}{5} \\times 0.25 + \\frac{1}{4}\\) adalah ....",
+                options: ["0.3", "0.4", "0.5", "0.6", "0.7"],
+                answer: "0.4",
+                solution: "Langkah 1: Ubah bilangan desimal ke pecahan atau sebaliknya agar seragam.<br>\\(0.25 = \\frac{1}{4}\\)<br><br>Langkah 2: Lakukan perkalian terlebih dahulu sesuai urutan operasi.<br>\\(\\frac{3}{5} \\times \\frac{1}{4} = \\frac{3 \\times 1}{5 \\times 4} = \\frac{3}{20}\\)<br><br>Langkah 3: Lakukan penjumlahan.<br>\\(\\frac{3}{20} + \\frac{1}{4}\\)<br>Untuk menjumlahkan pecahan, samakan penyebutnya. Penyebut bersama terkecil untuk 20 dan 4 adalah 20.<br>\\(\\frac{1}{4} = \\frac{1 \\times 5}{4 \\times 5} = \\frac{5}{20}\\)<br><br>Langkah 4: Jumlahkan pecahan.<br>\\(\\frac{3}{20} + \\frac{5}{20} = \\frac{3+5}{20} = \\frac{8}{20}\\)<br><br>Langkah 5: Sederhanakan pecahan.<br>\\(\\frac{8}{20}\\) dapat disederhanakan dengan membagi pembilang dan penyebut dengan 4.<br>\\(\\frac{8 \\div 4}{20 \\div 4} = \\frac{2}{5}\\)<br><br>Langkah 6: Ubah kembali ke desimal jika diperlukan untuk mencocokkan opsi.<br>\\(\\frac{2}{5} = 0.4\\)<br><br>Jadi, hasil dari \\(\\frac{3}{5} \\times 0.25 + \\frac{1}{4}\\) adalah \\(0.4\\)."
+            },
+            {
+                id: 2,
+                text: "Jika \\(x = 3\\) dan \\(y = -2\\), maka nilai dari \\(2x^2 - 3xy + y^2\\) adalah ....",
+                options: ["18", "24", "36", "40", "48"],
+                answer: "40",
+                solution: "Substitusikan nilai \\(x = 3\\) dan \\(y = -2\\) ke dalam ekspresi \\(2x^2 - 3xy + y^2\\).<br><br>\\(2(3)^2 - 3(3)(-2) + (-2)^2\\)<br><br>Hitung masing-masing bagian:<br>\\(2(3)^2 = 2(9) = 18\\)<br>\\(-3(3)(-2) = -9(-2) = 18\\)<br>\\((-2)^2 = 4\\)<br><br>Jumlahkan hasilnya:<br>\\(18 + 18 + 4 = 40\\)<br><br>Jadi, nilai dari \\(2x^2 - 3xy + y^2\\) adalah 40."
+            },
+            {
+                id: 3,
+                text: "Sebuah segitiga siku-siku memiliki panjang sisi miring 13 cm dan salah satu sisi tegaknya 5 cm. Panjang sisi tegak lainnya adalah ....",
+                options: ["8 cm", "10 cm", "12 cm", "15 cm", "17 cm"],
+                answer: "12 cm",
+                solution: "Gunakan teorema Pythagoras: \\(a^2 + b^2 = c^2\\), di mana \\(c\\) adalah sisi miring dan \\(a, b\\) adalah sisi tegak.<br>Diketahui:<br>Sisi miring \\(c = 13\\) cm<br>Sisi tegak \\(a = 5\\) cm<br>Kita mencari sisi tegak lainnya \\(b\\).<br>\\(5^2 + b^2 = 13^2\\)<br>\\(25 + b^2 = 169\\)<br>Kurangkan 25 dari kedua sisi:<br>\\(b^2 = 169 - 25\\)<br>\\(b^2 = 144\\)<br>Akar kuadratkan kedua sisi untuk mendapatkan \\(b\\):<br>\\(b = \\sqrt{144}\\)<br>\\(b = 12\\) cm<br><br>Jadi, panjang sisi tegak lainnya adalah 12 cm."
+            },
+            {
+                id: 4,
+                text: "Rata-rata nilai ulangan Matematika dari 15 siswa adalah 70. Jika ditambahkan nilai seorang siswa baru, rata-rata kelas menjadi 71. Berapakah nilai siswa baru tersebut?",
+                options: ["75", "78", "80", "85", "86"],
+                answer: "86",
+                solution: "1. Total nilai 15 siswa awal:<br>   Total nilai = jumlah siswa \\(\\times\\) rata-rata = \\(15 \\times 70 = 1050\\)<br><br>2. Setelah siswa baru bergabung, jumlah siswa menjadi \\(15 + 1 = 16\\) siswa.<br>   Rata-rata baru adalah 71.<br>   Total nilai 16 siswa = jumlah siswa \\(\\times\\) rata-rata baru = \\(16 \\times 71 = 1136\\)<br><br>3. Nilai siswa baru adalah selisih total nilai 16 siswa dengan total nilai 15 siswa awal.<br>   Nilai siswa baru = \\(1136 - 1050 = 86\\)<br><br>Jadi, nilai siswa baru tersebut adalah 86."
+            },
+            {
+                id: 5,
+                text: "Sebuah dadu dilempar sekali. Peluang muncul mata dadu prima adalah ....",
+                options: ["\\(\\frac{1}{6}\\)", "\\(\\frac{1}{3}\\)", "\\(\\frac{1}{2}\\)", "\\(\\frac{2}{3}\\)", "\\(\\frac{5}{6}\\)"],
+                answer: "\\(\\frac{1}{2}\\)",
+                solution: "Ruang sampel pelemparan dadu adalah \\(\\{1, 2, 3, 4, 5, 6\\}\\). Jadi, \\(n(S) = 6\\).<br><br>Bilangan prima yang mungkin muncul pada dadu adalah \\(\\{2, 3, 5\\}\\). Jadi, \\(n(A) = 3\\).<br><br>Peluang muncul mata dadu prima adalah \\(P(A) = \\frac{n(A)}{n(S)} = \\frac{3}{6} = \\frac{1}{2}\\).<br><br>Jadi, peluang muncul mata dadu prima adalah \\(\\frac{1}{2}\\)."
+            },
+            {
+                id: 6,
+                text: "Nilai dari \\(^2\\log 8 + ^3\\log 9 - ^5\\log 25\\) adalah ....",
+                options: ["1", "2", "3", "4", "5"],
+                answer: "3",
+                solution: "Gunakan sifat-sifat logaritma: \\(^a\\log a^n = n\\).<br><br>\\(^2\\log 8 = ^2\\log 2^3 = 3\\)<br>\\(^3\\log 9 = ^3\\log 3^2 = 2\\)<br>\\(^5\\log 25 = ^5\\log 5^2 = 2\\)<br><br>Substitusikan nilai-nilai ini ke dalam ekspresi:<br>\\(3 + 2 - 2 = 3\\)<br><br>Jadi, nilai dari \\(^2\\log 8 + ^3\\log 9 - ^5\\log 25\\) adalah 3."
+            },
+            {
+                id: 7,
+                text: "Jika matriks \\(A = \\begin{pmatrix} 3 & -1 \\\\ x & 2 \\end{pmatrix}\\) memiliki determinan 1, maka nilai \\(x\\) adalah ....",
+                options: ["-5", "-2", "2", "5", "10"],
+                answer: "-5",
+                solution: "Determinan matriks \\(A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}\\) adalah \\(ad - bc\\).<br><br>Untuk matriks \\(A = \\begin{pmatrix} 3 & -1 \\\\ x & 2 \\end{pmatrix}\\), determinannya adalah \\((3)(2) - (-1)(x)\\).<br><br>Diketahui determinan \\(A\\) adalah 1:<br>\\(6 - (-x) = 1\\)<br>\\(6 + x = 1\\)<br><br>Kurangkan 6 dari kedua sisi:<br>\\(x = 1 - 6\\)<br>\\(x = -5\\)<br><br>Jadi, nilai \\(x\\) adalah -5."
+            },
+            {
+                id: 8,
+                text: "Transformasi geometri yang memetakan titik \\(P(2, 3)\\) ke \\(P'(2, -3)\\) adalah ....",
+                options: ["Refleksi terhadap sumbu-x", "Refleksi terhadap sumbu-y", "Rotasi 90 derajat searah jarum jam", "Translasi \\(\\begin{pmatrix} 0 \\\\ -6 \\end{pmatrix}\\)", "Dilatasi dengan faktor skala -1"],
+                answer: "Refleksi terhadap sumbu-x",
+                solution: "Diketahui titik asal \\(P(2, 3)\\) dan bayangannya \\(P'(2, -3)\\).<br><br>Mari kita analisis perubahan koordinatnya:<br>Koordinat x tetap sama: dari 2 menjadi 2.<br>Koordinat y berubah tanda: dari 3 menjadi -3.<br><br>Transformasi yang mengubah \\((x, y)\\) menjadi \\((x, -y)\\) adalah refleksi (pencerminan) terhadap sumbu-x.<br><br>Contoh:<br>*   Refleksi terhadap sumbu-x: \\((x, y) \\rightarrow (x, -y)\\)<br>*   Refleksi terhadap sumbu-y: \\((x, y) \\rightarrow (-x, y)\\)<br>*   Rotasi 90 derajat searah jarum jam: \\((x, y) \\rightarrow (y, -x)\\)<br>*   Translasi \\(\\begin{pmatrix} a \\\\ b \\end{pmatrix}\\): \\((x, y) \\rightarrow (x+a, y+b)\\)<br>*   Dilatasi dengan faktor skala \\(k\\) dari pusat \\((0,0)\\): \\((x, y) \\rightarrow (kx, ky)\\)<br><br>Berdasarkan analisis, titik \\(P(2, 3)\\) menjadi \\(P'(2, -3)\\) adalah hasil dari refleksi terhadap sumbu-x.<br><br>Jadi, transformasi geometri tersebut adalah refleksi terhadap sumbu-x."
+            },
+            {
+                id: 9,
+                text: "Persamaan garis yang melalui titik \\((2, 5)\\) dan memiliki gradien \\(3\\) adalah ....",
+                options: ["\\(y = 3x - 1\\)", "\\(y = 3x + 1\\)", "\\(y = 2x - 1\\)", "\\(y = 2x + 1\\)", "\\(y = 3x - 2\\)"],
+                answer: "\\(y = 3x - 1\\)",
+                solution: "Gunakan rumus persamaan garis \\(y - y_1 = m(x - x_1)\\), di mana \\((x_1, y_1)\\) adalah titik yang dilalui garis dan \\(m\\) adalah gradien.<br>Diketahui:<br>Titik \\((x_1, y_1) = (2, 5)\\)<br>Gradien \\(m = 3\\)<br><br>Substitusikan nilai-nilai ini ke dalam rumus:<br>\\(y - 5 = 3(x - 2)\\)<br><br>Buka kurung di sisi kanan:<br>\\(y - 5 = 3x - 6\\)<br><br>Tambahkan 5 ke kedua sisi untuk menyelesaikan \\(y\\):<br>\\(y = 3x - 6 + 5\\)<br>\\(y = 3x - 1\\)<br><br>Jadi, persamaan garis yang melalui titik \\((2, 5)\\) dan memiliki gradien \\(3\\) adalah \\(y = 3x - 1\\)."
+            },
+            {
+                id: 10,
+                text: "Nilai dari \\(\\lim_{x \\to 1} \\frac{x^2 - 1}{x - 1}\\) adalah ....",
+                options: ["0", "1", "2", "Tidak terdefinisi", "Tidak ada"],
+                answer: "2",
+                solution: "Untuk mencari nilai limit \\(\\lim_{x \\to 1} \\frac{x^2 - 1}{x - 1}\\), kita bisa mencoba substitusi langsung \\(x=1\\).<br>Jika disubstitusi langsung, kita akan mendapatkan \\(\\frac{1^2 - 1}{1 - 1} = \\frac{0}{0}\\), yang merupakan bentuk tak tentu. Ini berarti kita perlu menyederhanakan ekspresi.<br><br>Bagian pembilang \\(x^2 - 1\\) adalah bentuk selisih kuadrat yang dapat difaktorkan menjadi \\((x - 1)(x + 1)\\).<br><br>Jadi, ekspresi limit menjadi:<br>\\(\\lim_{x \\to 1} \\frac{(x - 1)(x + 1)}{x - 1}\\)<br><br>Karena \\(x \\to 1\\), berarti \\(x \\neq 1\\), sehingga \\((x - 1)\\) pada pembilang dan penyebut dapat dicoret.<br>\\(\\lim_{x \\to 1} (x + 1)\\)<br><br>Sekarang substitusikan \\(x = 1\\):<br>\\(1 + 1 = 2\\)<br><br>Jadi, nilai dari \\(\\lim_{x \\to 1} \\frac{x^2 - 1}{x - 1}\\) adalah 2."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        const userAnswers = new Array(questions.length).fill(null);
+        let timeLeft = 30 * 60; // 60 minutes in seconds
+        let timerInterval;
+        let isReviewMode = false; // New flag for review mode
+
+        // Get DOM elements
+        const questionArea = document.getElementById('question-area');
+        const questionListContainer = document.getElementById('question-list');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const finishExamButton = document.getElementById('finish-exam-button');
+        const countdownTimerDisplay = document.getElementById('countdown-timer');
+        const currentTimeDisplay = document.querySelector('#current-time strong');
+        const scoreModal = document.getElementById('scoreModal');
+        const finalScoreDisplay = document.getElementById('finalScore');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const closeModalButton = document.getElementById('closeModal');
+        const examNavigationDiv = document.getElementById('exam-navigation');
+        const examFinishDiv = document.getElementById('exam-finish');
+
+
+        // Function to render MathJax equations
+        function renderMathJax() {
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Function to load and display a question
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const question = questions[index];
+            let optionsHtml = '';
+
+            question.options.forEach((option, i) => {
+                const optionId = `q${question.id}-option${i}`;
+                const isChecked = userAnswers[index] === option;
+                const isCorrect = question.answer === option;
+                
+                let labelClass = '';
+                if (isReviewMode) {
+                    if (isCorrect) {
+                        labelClass = 'correct-answer-label';
+                    } else if (isChecked && !isCorrect) {
+                        labelClass = 'wrong-answer-label';
+                    }
+                }
+
+                optionsHtml += `
+                    <label for="${optionId}" class="${labelClass}">
+                        <input type="radio" id="${optionId}" name="question${question.id}" value="${option}" ${isChecked ? 'checked' : ''} ${isReviewMode ? 'disabled' : ''}>
+                        ${option}
+                    </label>
+                `;
+            });
+
+            let solutionSection = '';
+            let optionsAreaClass = 'options';
+            if (isReviewMode) {
+                optionsAreaClass += ' review';
+                solutionSection = `
+                    <button class="review-solution-button" onclick="toggleSolution(${question.id})">Tampilkan Solusi</button>
+                    <div id="solution-${question.id}" class="solution-text">
+                        <p><strong>Solusi:</strong></p>
+                        <p>${question.solution}</p>
+                    </div>
+                `;
+            }
+
+            questionArea.innerHTML = `
+                <h2>Soal No. ${question.id}</h2>
+                <div class="question-text">${question.text}</div>
+                <div class="${optionsAreaClass}">
+                    ${optionsHtml}
+                </div>
+                ${solutionSection}
+            `;
+            
+            // Add event listeners to radio buttons only in exam mode
+            if (!isReviewMode) {
+                const radioButtons = questionArea.querySelectorAll('input[type="radio"]');
+                radioButtons.forEach(radio => {
+                    radio.addEventListener('change', (event) => {
+                        saveAnswer(index, event.target.value);
+                    });
+                });
+            }
+            
+            updateNavigationButtons();
+            updateQuestionListColors();
+            renderMathJax(); // Render any new math elements
+        }
+
+        // Function to toggle solution visibility
+        function toggleSolution(questionId) {
+            const solutionDiv = document.getElementById(`solution-${questionId}`);
+            const button = document.querySelector(`#question-area .review-solution-button`); 
+            if (solutionDiv.style.display === 'none' || solutionDiv.style.display === '') {
+                solutionDiv.style.display = 'block';
+                button.textContent = 'Sembunyikan Solusi';
+            } else {
+                solutionDiv.style.display = 'none';
+                button.textContent = 'Tampilkan Solusi';
+            }
+            renderMathJax(); // Re-render MathJax in case solution content was hidden/displayed
+        }
+
+        // Function to save user's answer
+        function saveAnswer(questionIndex, value) {
+            userAnswers[questionIndex] = value;
+            updateQuestionListColors();
+        }
+
+        // Function to update navigation buttons (Prev/Next) state
+        function updateNavigationButtons() {
+            prevButton.disabled = currentQuestionIndex === 0;
+            nextButton.disabled = currentQuestionIndex === questions.length - 1;
+        }
+
+        // Function to update question list buttons (color coding)
+        function updateQuestionListColors() {
+            questionListContainer.innerHTML = '';
+            questions.forEach((q, index) => {
+                const button = document.createElement('button');
+                button.textContent = q.id;
+                button.onclick = () => loadQuestion(index);
+                if (index === currentQuestionIndex) {
+                    button.classList.add('active');
+                }
+                if (userAnswers[index] !== null) {
+                    button.classList.add('answered');
+                }
+                questionListContainer.appendChild(button);
+            });
+        }
+
+        // Function to start the countdown timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
+
+                countdownTimerDisplay.textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Waktu ujian habis!');
+                    finishExam();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        // Function to update current time display
+        function updateCurrentTime() {
+            const now = new Date();
+            currentTimeDisplay.textContent = now.toLocaleString('id-ID', {
+                weekday: 'long', year: 'numeric', month: 'long', 
+                day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+        }
+
+        // Function to calculate the final score
+        function calculateScore() {
+            let correctAnswers = 0;
+            questions.forEach((q, index) => {
+                if (userAnswers[index] === q.answer) {
+                    correctAnswers++;
+                }
+            });
+            return (correctAnswers / questions.length) * 100;
+        }
+
+        // Function to finalize the exam and show the score modal
+        function finishExam() {
+            clearInterval(timerInterval);
+            const score = calculateScore();
+            finalScoreDisplay.textContent = `${score.toFixed(2)}%`;
+            if (score >= 80) {
+                feedbackMessage.textContent = "Selamat! Anda mendapatkan skor yang sangat baik.";
+                finalScoreDisplay.style.color = "#28a745";
+            } else if (score >= 60) {
+                feedbackMessage.textContent = "Cukup baik, terus tingkatkan kemampuan Anda.";
+                finalScoreDisplay.style.color = "#ffc107";
+            } else {
+                feedbackMessage.textContent = "Perlu lebih banyak belajar dan berlatih.";
+                finalScoreDisplay.style.color = "#dc3545";
+            }
+            scoreModal.style.display = 'flex';
+        }
+
+        // Function to switch to review mode after the exam
+        function enterReviewMode() {
+            isReviewMode = true;
+            // Hide exam-specific elements
+            document.querySelector('.timer-box').style.display = 'none';
+            examFinishDiv.style.display = 'none';
+            
+            // Add an info message about review mode
+            const reviewInfo = document.createElement('div');
+            reviewInfo.classList.add('review-mode-info');
+            reviewInfo.textContent = 'Anda dalam mode review. Jawaban yang benar ditandai hijau, jawaban Anda (jika salah) ditandai merah.';
+            questionArea.insertAdjacentElement('beforebegin', reviewInfo);
+
+            loadQuestion(0); // Load the first question in review mode
+        }
+
+        // Event Listeners
+        prevButton.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            }
+        });
+
+        finishExamButton.addEventListener('click', () => {
+            if (confirm('Apakah Anda yakin ingin mengakhiri ujian? Waktu akan berhenti dan jawaban akan dinilai.')) {
+                finishExam();
+            }
+        });
+
+        closeModalButton.addEventListener('click', () => {
+            scoreModal.style.display = 'none';
+            enterReviewMode();
+        });
+
+        // Initialize the exam when the window loads
+        window.onload = () => {
+            loadQuestion(currentQuestionIndex);
+            startTimer();
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000); // Update current time every second
+        };
+    </script>
+</body>
+</html>
